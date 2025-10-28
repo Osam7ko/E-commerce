@@ -12,8 +12,13 @@ export class ProductService {
 
   private baseUrl = 'http://localhost:8081/api/products'
 
-  getProductList(): Observable<Product[]>{
-    return this.httpClint.get<GetResponse>(this.baseUrl).pipe(
+  getProductList(theCategoryId: number): Observable<Product[]>{
+
+    // @TODO: need to biuld the urlBase BK
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
+    
+
+    return this.httpClint.get<GetResponse>(searchUrl).pipe(
       map(response => response._embedded.products)
     );
   }

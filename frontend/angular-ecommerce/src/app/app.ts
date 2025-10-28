@@ -1,13 +1,15 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ProductList } from "./components/product-list/product-list";
+import { RouterOutlet, RouterLinkWithHref, RouterLinkActive } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductService } from './services/product.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ProductList,
-    HttpClientModule
+  imports: [
+    HttpClientModule,
+    RouterOutlet,
+    RouterLinkWithHref,
+    RouterLinkActive
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
