@@ -4,6 +4,15 @@
     <hr />
     <div class="container-fluid">
       <div class="row">
+        <!-- if products empty then display a message-->
+        <div
+          *ngIf="products?.length == 0"
+          class="alert alert-warning col-md-12"
+          role="alert"
+        >
+          No products found.
+        </div>
+
         <!-- loop over -->
         <div *ngFor="let tempProduct of products" class="col-md-3">
           <div class="product-box">

@@ -3,13 +3,15 @@ import { RouterOutlet, RouterLinkWithHref, RouterLinkActive } from '@angular/rou
 import { HttpClientModule } from '@angular/common/http';
 import { ProductService } from './services/product.service';
 import { ProductCategoryMenu } from "./components/product-category-menu/product-category-menu";
+import { Search } from "./components/search/search";
 
 @Component({
   selector: 'app-root',
   imports: [
     HttpClientModule,
     RouterOutlet,
-    ProductCategoryMenu
+    ProductCategoryMenu,
+    Search
 ],
   templateUrl: './app.html',
   styleUrl: './app.css',
