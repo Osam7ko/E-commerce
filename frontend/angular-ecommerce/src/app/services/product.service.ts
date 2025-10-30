@@ -21,6 +21,14 @@ export class ProductService {
     return this.getProducts(searchUrl);
   }
 
+  getProduct(theProductId: number): Observable<Product> {
+    // build the url based or product id
+
+    const productUrl = `${this.baseUrl}/${theProductId}`;
+
+    return this.httpClint.get<Product>(productUrl);
+  }
+
   getProductCategories(): Observable<ProductCategory[]> {
     return this.httpClint
       .get<GetResponseProductsCategory>(this.categoryURL)
