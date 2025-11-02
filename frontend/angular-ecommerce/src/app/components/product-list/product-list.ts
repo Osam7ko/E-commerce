@@ -3,18 +3,27 @@ import { ProductService } from '../../services/product.service';
 import { Product } from '../../common/product';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NgbModule],
   templateUrl: './product-list-grid.html',
   styleUrl: './product-list.css',
 })
 export class ProductList implements OnInit {
   products: Product[] = [];
   currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
   currentCategoryName: string = '';
   searchMode: boolean = false;
+
+  // Parameters for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 10;
+  theTotalElements: number = 0;
+
+  previousKeyword: string = '';
 
   constructor(
     private productService: ProductService,
@@ -26,6 +35,7 @@ export class ProductList implements OnInit {
       this.listProducts();
     });
   }
+
   listProducts() {
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
@@ -39,10 +49,23 @@ export class ProductList implements OnInit {
   handleSearchProducts() {
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
 
+    // if we have a diffrent keyword
+    if (this.previousKeyword != theKeyword) {
+      this.thePageNumber = 1;
+    }
+
+    this.previousKeyword = theKeyword;
+
+    console.log(`keyword=${theKeyword}, thepageNumber= ${this.thePageNumber}`);
+
     // now search for the products using keyword
-    this.productService.searchProducts(theKeyword).subscribe((data) => {
-      this.products = data;
-    });
+    this.productService
+      .searchProductsPaginate(
+        this.thePageNumber - 1,
+        this.thePageSize,
+        theKeyword
+      )
+      .subscribe(this.processResult());
   }
 
   handleListProducts() {
@@ -59,11 +82,33 @@ export class ProductList implements OnInit {
       this.currentCategoryName = 'Books';
     }
 
-    // now get the products for the givin id
+    // Check if we have a different category than previous
+    // If so, then set thePageNumber back to 1
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.thePageNumber = 1;
+    }
+    this.previousCategoryId = this.currentCategoryId;
+
+    // now get the products for the given category id with pagination
     this.productService
-      .getProductList(this.currentCategoryId)
-      .subscribe((data) => {
-        this.products = data;
-      });
+      .getProductListPaginate(
+        this.thePageNumber - 1,
+        this.thePageSize,
+        this.currentCategoryId
+      )
+      .subscribe(this.processResult());
+  }
+  updatePageSize(pageSize: string) {
+    this.thePageSize = +pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();
+  }
+  processResult() {
+    return (data: any) => {
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+    };
   }
 }
