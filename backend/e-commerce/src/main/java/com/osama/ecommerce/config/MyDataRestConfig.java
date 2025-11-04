@@ -1,7 +1,9 @@
 package com.osama.ecommerce.config;
 
+import com.osama.ecommerce.domain.entity.Country;
 import com.osama.ecommerce.domain.entity.Product;
 import com.osama.ecommerce.domain.entity.ProductCategory;
+import com.osama.ecommerce.domain.entity.State;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,15 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         entityManager = theEntityManager;
     }
 
+    private static void disableHttpMethods(Class theClass, RepositoryRestConfiguration config, HttpMethod[] theUnsupportedAction) {
+        config.getExposureConfiguration()
+                .forDomainType(theClass)
+                .withItemExposure(((metdata, httpMethods) ->
+                        httpMethods.disable(theUnsupportedAction)))
+                .withCollectionExposure(((metdata, httpMethods) ->
+                        httpMethods.disable(theUnsupportedAction)));
+    }
+
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         RepositoryRestConfigurer.super.configureRepositoryRestConfiguration(config, cors);
@@ -32,20 +43,16 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         HttpMethod[] theUnsupportedAction = {HttpMethod.DELETE, HttpMethod.POST, HttpMethod.PUT};
 
         // disable HTTP methods for products: PUT, POST , DELETE
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure(((metdata, httpMethods) ->
-                        httpMethods.disable(theUnsupportedAction)))
-                .withCollectionExposure(((metdata, httpMethods) ->
-                        httpMethods.disable(theUnsupportedAction)));
+        disableHttpMethods(Product.class, config, theUnsupportedAction);
 
         // disable HTTP methods for productCategory: PUT, POST , DELETE
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure(((metdata, httpMethods) ->
-                        httpMethods.disable(theUnsupportedAction)))
-                .withCollectionExposure(((metdata, httpMethods) ->
-                        httpMethods.disable(theUnsupportedAction)));
+        disableHttpMethods(ProductCategory.class, config, theUnsupportedAction);
+
+        // disable HTTP methods for products: PUT, POST , DELETE
+        disableHttpMethods(Country.class, config, theUnsupportedAction);
+
+        // disable HTTP methods for productCategory: PUT, POST , DELETE
+        disableHttpMethods(State.class, config, theUnsupportedAction);
 
 
         // call an internal helper method
