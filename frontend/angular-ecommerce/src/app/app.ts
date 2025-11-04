@@ -20,6 +20,7 @@ import { CartStatus } from './components/cart-status/cart-status';
     Search,
     NgbModule,
     CartStatus,
+    RouterLinkWithHref,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
