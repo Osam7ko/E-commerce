@@ -11,6 +11,7 @@ import { OEcommerceFrom } from '../../services/oecommerce-from.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
 import { OEcommerceValidator } from '../../validators/oecommerce-validator';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -34,10 +35,13 @@ export class Checkout implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dateService: OEcommerceFrom
+    private dateService: OEcommerceFrom,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
+    this.reviewCartDetails();
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [
@@ -100,6 +104,15 @@ export class Checkout implements OnInit {
     // populate the Countries
     this.dateService.getContries().subscribe((data) => {
       this.countries = data;
+    });
+  }
+  reviewCartDetails() {
+    // subsecripe on Quantity and Price
+    this.cartService.totalQuantity.subscribe((totalQuantity) => {
+      this.totalQuantity = totalQuantity;
+    });
+    this.cartService.totalPrice.subscribe((totalPrice) => {
+      this.totalPrice = totalPrice;
     });
   }
 
