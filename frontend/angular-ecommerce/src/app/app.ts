@@ -11,6 +11,7 @@ import { Search } from './components/search/search';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatus } from './components/cart-status/cart-status';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoginStatus } from './components/login-status/login-status';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CartStatus,
     RouterLinkWithHref,
     ReactiveFormsModule,
+    LoginStatus,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

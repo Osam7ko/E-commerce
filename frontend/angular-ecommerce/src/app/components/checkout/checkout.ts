@@ -10,6 +10,7 @@ import {
 import { OEcommerceFrom } from '../../services/oecommerce-from.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
+import { KeycloakService } from '../../services/keycloak.service';
 import { OEcommerceValidator } from '../../validators/oecommerce-validator';
 import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout-service';
@@ -43,25 +44,37 @@ export class Checkout implements OnInit {
     private dateService: OEcommerceFrom,
     private cartService: CartService,
     private checkoutService: CheckoutService,
-    private router: Router
+    private router: Router,
+    private keycloakService: KeycloakService
   ) {}
 
   ngOnInit(): void {
     this.reviewCartDetails();
 
+    // Get user info from Keycloak if authenticated
+    const userFirstName = this.keycloakService.isLoggedIn()
+      ? this.keycloakService.getUserFirstName()
+      : '';
+    const userLastName = this.keycloakService.isLoggedIn()
+      ? this.keycloakService.getUserLastName()
+      : '';
+    const userEmail = this.keycloakService.isLoggedIn()
+      ? this.keycloakService.getUserEmail()
+      : '';
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: new FormControl('', [
+        firstName: new FormControl(userFirstName, [
           Validators.required,
           Validators.minLength(2),
           OEcommerceValidator.notOnlyWhitespace,
         ]),
-        lastName: new FormControl('', [
+        lastName: new FormControl(userLastName, [
           Validators.required,
           Validators.minLength(2),
           OEcommerceValidator.notOnlyWhitespace,
         ]),
-        email: new FormControl('', [
+        email: new FormControl(userEmail, [
           Validators.required,
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
         ]),

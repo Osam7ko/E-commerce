@@ -1,0 +1,48 @@
+<div class="login-status-header">
+  <!-- Show login/register buttons when not authenticated -->
+  <div *ngIf="!isAuthenticated" class="login-status-buttons">
+    <button class="security-btn" (click)="login()">
+      <i class="fas fa-sign-in-alt"></i> Login
+    </button>
+    <button class="btn btn-outline-primary btn-sm" (click)="register()">
+      <i class="fas fa-user-plus"></i> Register
+    </button>
+  </div>
+
+  <!-- Show user info and logout when authenticated -->
+  <div *ngIf="isAuthenticated" class="login-status-user">
+    <div class="dropdown">
+      <button
+        class="btn btn-outline-secondary btn-sm dropdown-toggle"
+        type="button"
+        id="userDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <i class="fas fa-user"></i>
+        <span class="ms-2">{{ userFullName || userEmail }}</span>
+      </button>
+      <ul
+        class="dropdown-menu dropdown-menu-end"
+        aria-labelledby="userDropdown"
+      >
+        <li>
+          <span class="dropdown-item-text">
+            <strong>{{ userFullName }}</strong>
+          </span>
+        </li>
+        <li>
+          <span class="dropdown-item-text text-muted small">
+            {{ userEmail }}
+          </span>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <button class="dropdown-item" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

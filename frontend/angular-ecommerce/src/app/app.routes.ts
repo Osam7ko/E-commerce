@@ -3,10 +3,11 @@ import { ProductList } from './components/product-list/product-list';
 import { ProductDetails } from './components/product-details/product-details';
 import { CartDetails } from './components/cart-details/cart-details';
 import { Checkout } from './components/checkout/checkout';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'cart-details', component: CartDetails },
-  { path: 'checkout', component: Checkout },
+  { path: 'checkout', component: Checkout, canActivate: [authGuard] },
   { path: 'category/:id/:name', component: ProductList },
   { path: 'category', component: ProductList },
   { path: 'products', component: ProductList },
@@ -14,5 +15,4 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetails },
   { path: '', redirectTo: '/products', pathMatch: 'full' },
   { path: '**', redirectTo: '/products', pathMatch: 'full' },
-  { path: 'search/:keyword', component: ProductList },
 ];

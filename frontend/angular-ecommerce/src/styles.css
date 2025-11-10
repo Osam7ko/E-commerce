@@ -185,7 +185,14 @@ aside.menu-sidebar.d-none.d-lg-block.clr {
     -webkit-justify-content: space-between;
     -moz-box-pack: justify;
     -ms-flex-pack: justify;
-    justify-content: space-between
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.account-wrap {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
 
 .header-button {
